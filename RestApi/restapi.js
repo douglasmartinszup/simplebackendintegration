@@ -1,11 +1,32 @@
 const express = require("express"); //Crio uma const express que faz um require do método express
 const restapi = express(); //Crio uma const que vai utilizar esse método que acabeid e criar
 const morgan = require("morgan");
+const bodyParser = require('body-parser');
 
 const rotaResponse = require("./routes/response");
 const rotaChamados = require("./routes/chamados");
 
 restapi.use(morgan("dev")); // O morgan ele te dá logs de chamados feito na sua API, você pode acompanhar no terminal assim que rodar no nmp start
+restapi.use(bodyParser.urlencoded({ extended: false })); //Apenas aceitar dados simples
+restapi.use(bodyParser.json()) //Aceitar apenas entradas no formato Json
+
+
+//Resolvendo problemas de CORS
+restapi.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header(
+        'Access-Control-Allow-Header',
+        'Content-Type',
+        'Origin, X-Requested-With, Accept, Authorization',
+    );
+    if (req.method === 'OPTIONS') {
+        req.header('Acces-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+        return res.status(200).send({});
+    }
+    next();
+})
+
+//Chamando rotas
 restapi.use("/response", rotaResponse);
 restapi.use("/chamados", rotaChamados);
 

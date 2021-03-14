@@ -11,9 +11,16 @@ router.get('/', (req, res, next) => {
 
 //Método POST na rota /chamados de um chamado (inclusão de um novo, criar um novo chamado)
 router.post('/', (req, res, next) => {
+    const chamado = {
+        id_chamados: req.body.id_chamados,
+        descricao: req.body.descricao
+    }
     res.status(201).send({ //Status 201 sendo que foi feito o post corretamente 
-        mensagem: 'Chamado criado'
+        mensagem: 'Chamado criado',
+        chamadoCriado: chamado
     });
+
+
 });
 
 //Método DELETE na rota /chamados de um chamado (deleção de um chamado)
