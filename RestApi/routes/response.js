@@ -11,8 +11,14 @@ router.get('/', (req, res, next) => {
 
 //Método POST na rota /response de um chamado (inclusão de um novo)
 router.post('/', (req, res, next) => {
+    const response = {
+        nome: req.body.nome,
+        codigo: req.body.codigo
+    };
+
     res.status(201).send({ //Status 201 sendo que foi feito o post corretamente 
-        mensagem: 'Response criada com sucesso'
+        mensagem: 'Response criada com sucesso',
+        responseCriada: response
     });
 });
 
