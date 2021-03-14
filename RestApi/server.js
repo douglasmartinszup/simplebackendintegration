@@ -1,0 +1,6 @@
+const http =  require('http');
+const app = require('./restapi');
+const port = process.env.PORT || 3005;
+const server = http.createServer(app);
+
+server.listen(port);
