@@ -1,16 +1,36 @@
-const express = require("express");
-const restapi = express();
+const express = require("express"); //Crio uma const express que faz um require do método express
+const restapi = express(); //Crio uma const que vai utilizar esse método que acabeid e criar
+const morgan = require("morgan");
 
 const rotaResponse = require("./routes/response");
+const rotaChamados = require("./routes/chamados");
 
-restapi.use('/response',rotaResponse );
-   
+restapi.use(morgan("dev")); // O morgan ele te dá logs de chamados feito na sua API, você pode acompanhar no terminal assim que rodar no nmp start
+restapi.use("/response", rotaResponse);
+restapi.use("/chamados", rotaChamados);
 
-restapi.use('/teste',(req, res, next)=>{
-    res.status(200).send({
-        mensagem: "Ok Sua API está online "
+
+//Quando não encontrar rotas existentes
+restapi.use((req, res, next) => {
+  const erro = new Error("Esta rota não existe.");
+  erro.status = 404;
+  next(erro);
+});
+
+//Resposta para quando usuário tentar uma rota que não existe
+restapi.use((error, req, res, next) => {
+    res.status(error.status || 500);
+    return res.send({
+        erro:{
+            mensagem: error.message
+        }
     })
-    
+})
+
+restapi.use("/teste", (req, res, next) => {
+  res.status(200).send({
+    mensagem: "Ok Sua API está online ",
+  });
 });
 
 module.exports = restapi;
